@@ -1,0 +1,7 @@
+.idea
+
+rechnungen/vendor
+angebote/vendor
+angebote/.keystore.yml
+.keystore.yml
+crm/vendor
