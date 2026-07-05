@@ -1,6 +1,6 @@
 ---
 name: ai-usage-info
-description: Use this skill to detect the usage of libraries that should be used within the project.
+description: Use this skill to detect the usage of libraries that should be used within the project. Reads or writes .ai-usage-info.md files in node_modules and vendor folders. 
 ---
 
 # Basic Coding
