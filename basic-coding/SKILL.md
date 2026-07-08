@@ -23,7 +23,10 @@ This is the fundamental skill for coding.
 - Bootstrap breakpoint classes like `col-md-*`, `col-lg-*`, `col-xl-*`, `d-md-*`, `d-lg-*` should be considered replaced by the trunkjs/responsive syntax.
 - Only add custom classes or `<style>` blocks in exceptional cases, e.g. when nested/sub-elements must be targeted, project utilities are not sufficient, or reusable component styling is required.
 - If a `<style>` block defines custom CSS variables, declare those variables together at the top of the style block or at the top-level selector first, before the other rules that use them.
-
+- Wenn Styles für ein wiederverwendbares Beispiel oder eine Variante erstellt werden, bevorzugt ein SCSS-Mixin anlegen und dieses über eine semantische Klasse einbinden, statt Styles direkt lose auf die Klasse zu schreiben.
+- Bei Folgefragen zu bereits bearbeiteten Dateien die betroffenen Dateien erneut einlesen, bevor Änderungen vorgeschlagen oder umgesetzt werden. Der User kann zwischenzeitlich selbst Änderungen gemacht haben.
+- Wenn CSS-Varianten über Klassen aktiviert werden, die Klasse sprechend benennen und alle dazugehörigen Styles zusammenhalten.
+- Für Demo-Styles keine unnötigen globalen Selektoren verwenden; möglichst am Demo-Root-Element oder an der konkreten Komponentenklasse scopen.
 
 ## Approach to fulfill a task
 
