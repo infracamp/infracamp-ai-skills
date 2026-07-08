@@ -26,6 +26,7 @@ This is the fundamental skill for coding.
 - Wenn Styles für ein wiederverwendbares Beispiel oder eine Variante erstellt werden, bevorzugt ein SCSS-Mixin anlegen und dieses über eine semantische Klasse einbinden, statt Styles direkt lose auf die Klasse zu schreiben.
 - Bei Folgefragen zu bereits bearbeiteten Dateien die betroffenen Dateien erneut einlesen, bevor Änderungen vorgeschlagen oder umgesetzt werden. Der User kann zwischenzeitlich selbst Änderungen gemacht haben.
 - Wenn CSS-Varianten über Klassen aktiviert werden, die Klasse sprechend benennen und alle dazugehörigen Styles zusammenhalten.
+- Ein Element sollte immer nur eine `style-*` Klasse gesetzt haben.
 - Für Demo-Styles keine unnötigen globalen Selektoren verwenden; möglichst am Demo-Root-Element oder an der konkreten Komponentenklasse scopen.
 
 
