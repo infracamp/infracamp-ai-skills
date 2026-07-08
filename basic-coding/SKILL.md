@@ -28,6 +28,8 @@ This is the fundamental skill for coding.
 - Wenn CSS-Varianten über Klassen aktiviert werden, die Klasse sprechend benennen und alle dazugehörigen Styles zusammenhalten.
 - Für Demo-Styles keine unnötigen globalen Selektoren verwenden; möglichst am Demo-Root-Element oder an der konkreten Komponentenklasse scopen.
 
+
+
 ## Approach to fulfill a task
 
 - Think about how many files need to be changed to fulfill the task. If it is more than 3 or it is a big change 
@@ -36,6 +38,10 @@ This is the fundamental skill for coding.
 - Find inconsistencies or unclear within the prompt and ask the user for clarification if found.
 - Perform the Job.
 - Give a short summary of what you did and what files you changed.
+
+## CSS / SCSS
+
+- We use mobile-first approach. D.h. modifier-classen gelten erst mal für alle Breakpoints. Sollten variationen für breakpoints exisiteren, werden diese für desktop und tablet angelegt z.B. `reverse` und `reverse-desktop` oder `reverse-desktop`.
 
 ## General Do and Dont`s
 
