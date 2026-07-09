@@ -60,6 +60,6 @@ This is the fundamental skill for coding.
 - Do not modify stuff in `vendor` or `node_modules` folders or files in `workspaces`. If you need changes to be made here, ask the user to do it.
 - Do not excessive scanning or opening of files. 
 - Do not excessive programming code snippets to perform a task. Try to use bash or the existing coding tools
-- 
+- Do not import from "workspaces" or "node_modules" folders directly. Always use the package name to import from. (e.g. `import { MyComponent } from '@my-package/my-component'` instead of `import { MyComponent } from 'workspaces/my-package/src/MyComponent'`). If you find relative imports of packages, ask the user if you should fix them. 
 
 
