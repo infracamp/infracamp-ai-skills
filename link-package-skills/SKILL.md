@@ -1,0 +1,129 @@
+---
+name: link-package-skills
+description: Use this skill when linking or consuming package-provided skills from installed npm libraries via skills-npm.
+---
+
+# Link Package Skills
+
+Use this skill when the user wants to consume skills that are shipped inside npm packages.
+
+The recommended tool for this is:
+
+- `skills-npm`
+
+## What skills-npm does
+
+`skills-npm` scans installed packages for skills and creates symlinks into the selected agent skill directories.
+
+The generated symlink names follow this pattern:
+
+```text
+npm-<package-name>-<skill-name>
+```
+
+## Install
+
+```bash
+npm install --save-dev skills-npm
+npx skills-npm setup
+```
+
+## What setup does
+
+`npx skills-npm setup` does three things:
+
+1. it adds the `prepare` hook to `package.json`
+2. it performs the first scan
+3. it adds the generated skill links to `.gitignore`
+
+After that, sync runs again automatically on `npm install` or `npm ci` through the prepare hook:
+
+```json
+{
+  "scripts": {
+    "prepare": "skills-npm"
+  }
+}
+```
+
+## Package skill source layout
+
+When creating package skills for npm consumption, prefer this package-internal layout:
+
+```text
+packages/<package>/skills/<skillname>/
+```
+
+Important:
+
+- the `skills/` directory must live on the same level as `package.json`
+- do not place package skills under `src/`
+- the `skills/` directory must be included in the package build/publish setup so `skills-npm` can discover it after installation
+- make sure it is considered both in Vite/Nx asset handling and in the published package metadata from `package.json`
+
+Example:
+
+```text
+packages/form/skills/form-usage/SKILL.md
+```
+
+This is the preferred newer format.
+
+Older package-local skill locations like:
+
+```text
+packages/<package>/.agents/skills/
+```
+
+should only be migrated on explicit user request.
+
+## Configuring selected packages and skills
+
+Use `skills-npm.config.ts` to choose which packages and skills should be linked:
+
+```ts
+import { defineConfig } from 'skills-npm'
+
+export default defineConfig({
+  source: 'package.json',
+
+  agents: ['agents', 'codex'],
+
+  include: [
+    '@vueuse/skills',
+    '@company/*',
+    {
+      package: '@slidev/cli',
+      skills: ['presenter-mode'],
+    },
+  ],
+
+  exclude: [
+    '@company/legacy-tools',
+    {
+      package: '@company/*',
+      skills: ['internal-deployment'],
+    },
+  ],
+})
+```
+
+## Real package examples mentioned in the README
+
+The official README already mentions real npm packages with built-in skills, including:
+
+- `@slidev/cli`
+- `@vueuse/skills`
+- `@vitejs/devtools-kit`
+- `eslint-vitest-rule-tester`
+
+## Agent rules
+
+- Prefer `skills-npm` when the goal is to consume skills from installed npm packages.
+- Use `npm install --save-dev skills-npm` and `npx skills-npm setup` for the initial setup.
+- Explain that the setup modifies `package.json`, runs the first scan, and updates `.gitignore`.
+- Mention that generated links are symlinks named `npm-<package-name>-<skill-name>`.
+- Prefer the package-internal `skills/<skillname>/` layout for newly created package skills.
+- The `skills/` directory must live next to `package.json`.
+- Make sure `skills/` is included in Vite/Nx assets and in `package.json` publish metadata so installed packages still expose the skills.
+- Treat `.agents/skills` inside packages as older layout and migrate it only on explicit user request.
