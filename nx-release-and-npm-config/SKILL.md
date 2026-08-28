@@ -81,6 +81,13 @@ npm login
 ```
 
 Then the user must complete the browser login.
+After login, ask the user to run one trusted-publishing read command themselves once, for example:
+
+```bash
+npm trust list @leuffen/announcements
+```
+
+This confirms the npm session and opens/warms the 2FA authorization window for trusted-publishing changes in this shell session. After this succeeds, the agent can take over the remaining `npm trust list`, `npm trust revoke`, and `npm trust github` commands.
 
 Commands the **agent** should run afterwards:
 
@@ -196,6 +203,13 @@ npm login
 ```
 
 This opens the login flow. Complete the browser login.
+For trusted-publishing setup or repair, the user should then run one trust-list command themselves to confirm the session and satisfy/prime 2FA for this shell session, for example:
+
+```bash
+npm trust list @leuffen/announcements
+```
+
+After that command succeeds, the agent may continue with the remaining trusted-publishing verification or configuration commands.
 
 ### Step 2: publish the package manually
 
@@ -311,7 +325,8 @@ git push --follow-tags origin main
 - When configuring trust in a monorepo, iterate over package names explicitly.
 - Verify the workflow filename and repository slug carefully before running `npm trust github`.
 - If release or publish logs contain `Not Found`, first let the user log in with `npm login`.
-- Once the user is logged in, run the relevant verification commands yourself, such as `npm view`, `npm owner ls`, `npm trust list`, `npm trust revoke`, and `npm trust github`.
+- After `npm login`, ask the user to run `npm trust list @leuffen/announcements` once themselves when working on this repository/package; for other packages use the affected package name. This confirms the npm session and primes the 2FA authorization window for trusted-publishing changes in the current shell session.
+- Once that user-run trust-list command succeeds, run the relevant verification commands yourself, such as `npm view`, `npm owner ls`, `npm trust list`, `npm trust revoke`, and `npm trust github`.
 - If `npm trust list` shows the wrong workflow file, revoke the old trust entry and recreate it with the correct workflow file.
 - Also check the affected package `package.json` for correct repository metadata and fix it when needed.
 - Make it explicit which commands the **user** must run and which commands the **agent** should run.
