@@ -5,8 +5,30 @@ description: Always use this skill whenever you have to code php,ts,scss,html,cs
 
 # Basic Coding
 
-This is the fundamental skill for coding. 
+This is the fundamental skill for coding.
 
+## Core principles
+
+- Prefer simple, readable and maintainable solutions.
+- Do not rebuild or refactor large parts unless the user explicitly wants that.
+- Work incrementally instead of doing broad rewrites.
+- Keep diffs small and understandable.
+- Adapt existing solutions before introducing new abstractions or architectures.
+- Avoid clever solutions when a straightforward one is sufficient.
+- Reuse existing patterns, utilities, APIs, and file structures whenever possible.
+- Ask early if requirements are ambiguous or if multiple valid implementation directions exist.
+- Stop early and ask before continuing when follow-up work goes beyond the original request.
+
+## When to ask first
+
+Ask the user before proceeding when:
+
+- requirements are ambiguous
+- a refactoring would go beyond the requested change
+- existing structures, APIs, or file formats would need to change
+- additional follow-up work is obvious but not explicitly requested
+- both a minimal fix and a larger cleanup are possible
+- a change would affect more than 3 files or would be a larger structural change
 
 ## Basic rules
 
@@ -34,10 +56,12 @@ This is the fundamental skill for coding.
 ## Approach to fulfill a task
 
 - Think about how many files need to be changed to fulfill the task. If it is more than 3 or it is a big change 
-  to a single file, Provide the user with a short plan and ask if you are allowed to do it.
+  to a single file, provide the user with a short plan and ask if you are allowed to do it.
 - Scan the project for existing files. Exclude the node_modules and vendor and workspaces folders.
+- Check for existing patterns, helpers, APIs, and structures before introducing something new.
 - Find inconsistencies or unclear within the prompt and ask the user for clarification if found.
-- Perform the Job.
+- Prefer the smallest fitting change over a broad rewrite.
+- Perform the job.
 - Give a short summary of what you did and what files you changed.
 
 ## CSS / SCSS
