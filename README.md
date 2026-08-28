@@ -2,7 +2,7 @@
 ## Install
 
 ```bash
-git submodule add -b main git@github.com:infracamp/infracamp-ai-skills.git .pi/skills/infracamp-ai-skills
+git submodule add -b main git@github.com:infracamp/infracamp-ai-skills.git .agents/skills/infracamp-ai-skills
 
 ## Laden / aktualisieren
 git submodule update --init --recursive --remote
