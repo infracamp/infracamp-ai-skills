@@ -67,6 +67,89 @@ Do not forget this. Without the tags, the publish workflow will usually not run.
 - Check whether Nx created a commit or tags before retrying.
 - In monorepos, prefer targeted releases with `-p <package>` if the user only wants specific packages.
 - If a package build is intentionally disabled or replaced, note that clearly before releasing.
+- If the GitHub Actions release/publish build shows `Not Found` during npm publish or Nx release publish, treat that as a likely npm authentication or trusted-publishing problem.
+- In that case, first tell the user to log in in the container with `npm auth <username>` and complete the browser login.
+- After the user is logged in, verify that the package is correctly configured for trusted publishing.
+- Also verify the package metadata in `package.json`, especially `repository.type`, `repository.url`, and `repository.directory`. If those fields are missing or wrong, correct them.
+
+### `Not Found` during publish: who runs what
+
+Commands the **user** must run:
+
+```bash
+npm auth <username>
+```
+
+Then the user must complete the browser login.
+
+Commands the **agent** should run afterwards:
+
+```bash
+npm view <package-name> version
+npm owner ls <package-name>
+npm trust list <package-name>
+```
+
+If `npm trust list <package-name>` shows the wrong workflow file, revoke the old trust entry and create a new one.
+
+Successful flow used in this repository:
+
+1. let the user run `npm auth <username>`
+2. verify the package exists:
+   - `npm view <package-name> version`
+3. verify ownership:
+   - `npm owner ls <package-name>`
+4. inspect the current trusted publishing entry:
+   - `npm trust list <package-name>`
+5. if it points to the wrong workflow file (for example `publish-tags.yml` instead of `publish.yml`), revoke it:
+   - `npm trust revoke <package-name> --id=<trust-id>`
+6. recreate trust with the correct workflow:
+   - `npm trust github <package-name> --repo <owner>/<repo> --file <workflow-file>.yml --allow-publish --yes`
+7. verify again:
+   - `npm trust list <package-name>`
+
+Concrete example that worked successfully here:
+
+```bash
+npm trust list @trunkjs/demo-viewer
+npm trust list @trunkjs/vite-demo-viewer
+
+npm trust revoke @trunkjs/demo-viewer --id=<old-trust-id>
+npm trust revoke @trunkjs/vite-demo-viewer --id=<old-trust-id>
+
+npm trust github @trunkjs/demo-viewer \
+  --repo trunkjs/trunkjs-monorepo \
+  --file publish.yml \
+  --allow-publish \
+  --yes
+
+npm trust github @trunkjs/vite-demo-viewer \
+  --repo trunkjs/trunkjs-monorepo \
+  --file publish.yml \
+  --allow-publish \
+  --yes
+
+npm trust list @trunkjs/demo-viewer
+npm trust list @trunkjs/vite-demo-viewer
+```
+
+If package metadata is missing or wrong, correct `package.json` so that it contains the proper repository information, for example:
+
+```json
+{
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/<owner>/<repo>.git",
+    "directory": "packages/<package-dir>"
+  }
+}
+```
+
+Optional helper command for workspace packages:
+
+```bash
+npm pkg set repository.directory=packages/<package-dir> --workspace <package-name>
+```
 
 ## First-time npm publish for a new package
 
@@ -78,6 +161,33 @@ Required process:
 2. finish login in the browser
 3. publish the package once manually
 4. configure trusted publishing afterwards
+
+### First publish: who runs what
+
+Commands the **user** must run:
+
+```bash
+npm auth <username>
+```
+
+Then complete the browser login.
+
+Command the **agent** may prepare or instruct, but the publish itself should only happen for the first release:
+
+```bash
+cd dist/packages/<package>
+npm publish --access public
+```
+
+Commands the **agent** should run afterwards to configure trusted publishing:
+
+```bash
+npm trust github <package-name> \
+  --repo <owner>/<repo> \
+  --file <workflow-file>.yml \
+  --allow-publish \
+  --yes
+```
 
 ### Step 1: authenticate in the container
 
@@ -200,3 +310,8 @@ git push --follow-tags origin main
 - For first-time npm releases, do not claim trusted publishing is already active unless the package was already published and `npm trust` was configured successfully.
 - When configuring trust in a monorepo, iterate over package names explicitly.
 - Verify the workflow filename and repository slug carefully before running `npm trust github`.
+- If release or publish logs contain `Not Found`, first let the user log in with `npm auth <username>`.
+- Once the user is logged in, run the relevant verification commands yourself, such as `npm view`, `npm owner ls`, `npm trust list`, `npm trust revoke`, and `npm trust github`.
+- If `npm trust list` shows the wrong workflow file, revoke the old trust entry and recreate it with the correct workflow file.
+- Also check the affected package `package.json` for correct repository metadata and fix it when needed.
+- Make it explicit which commands the **user** must run and which commands the **agent** should run.
