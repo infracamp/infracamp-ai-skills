@@ -29,8 +29,11 @@ Included example files:
 - `vite.config.ts`
 - `vitest.workspace.ts`
 - `eslint.config.mjs`
+- `.kick.yml`
 
-Use this for target defaults, release setup, workspace scripts, path aliases, root TypeScript config, root Vite/Vitest config, and ESLint setup. Do not copy project-specific package names or paths blindly; adapt them to the target repository.
+Use this for target defaults, release setup, workspace scripts, path aliases, root TypeScript config, root Vite/Vitest config, ESLint setup, and Kickstart container startup. Do not copy project-specific package names or paths blindly; adapt them to the target repository.
+
+Projects using this setup should always be started with Kickstart. Assume the development environment runs inside the Kickstart container; run project commands there instead of starting the repo directly on the host.
 
 ### Minimal Nx package setup
 
@@ -100,12 +103,14 @@ When working on an Nx monorepo:
 3. Use `references/nx-repo-config/` for root workspace setup patterns.
 4. Use `references/nx-base-package/` for package-level setup patterns.
 5. Keep changes small and avoid restructuring existing Nx config unless requested.
-6. For new packages, register required path aliases or workspace references according to the repository's existing conventions.
+6. Start and work with the project through Kickstart; assume commands run inside the container.
+7. For new packages, register required path aliases or workspace references according to the repository's existing conventions.
 
 ## Agent rules
 
 - Use this skill for Nx root config, Nx release config, package project config, and creating new Nx packages.
 - Do not put Nx workspace setup guidance into generic TypeScript coding skills.
 - Prefer the current repository's own config/generator over these reference snapshots when available.
-- Adapt names, paths, ports, package scopes, and release settings to the target repository.
+- Adapt names, paths, ports, package scopes, Kickstart config, and release settings to the target repository.
+- Start the project via Kickstart and treat the container as the normal development runtime.
 - Do not add optional package files by default.
