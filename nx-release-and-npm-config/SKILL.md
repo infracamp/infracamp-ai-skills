@@ -51,6 +51,12 @@ Typical flow:
 7. creates git tags
 8. skips publishing when `--skip-publish` is used
 
+## Release verification discipline
+
+- Do not repeatedly run `git status`, `git log`, `git tag`, or `git diff` during releases.
+- For `nx release`, verify at most once before and once after the release, and only if the output does not already provide the needed facts.
+- If needed, bundle checks into one compact command; repeat only after state-changing commands, ambiguity, or explicit user request.
+
 ## After a successful Nx release
 
 Always tell the user to run:

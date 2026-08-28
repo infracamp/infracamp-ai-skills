@@ -158,7 +158,8 @@ Make sure `skills/` is shipped with the package. The directory must be included 
 
 ## Writing guidelines
 
-- Keep the main `SKILL.md` short.
+- Keep the main `SKILL.md` short and avoid repetitive rule variants.
+- Prefer one concise general rule over multiple near-duplicate rules for individual versions, tools, or cases.
 - Put the package name and purpose already into the frontmatter description.
 - Use concrete examples.
 - Prefer package-specific instructions over generic framework explanations.
@@ -175,5 +176,6 @@ Make sure `skills/` is shipped with the package. The directory must be included 
 - Make sure `skills/` is included in Vite/Nx assets and in `package.json` publish metadata when needed.
 - Treat `packages/<package>/.agents/skills/` as legacy unless the user explicitly wants to keep or migrate it.
 - Make the main package skill concise and descriptive.
+- Combine similar guidance into one sentence instead of adding separate rules for every version, tool, or case.
 - Put installation and setup into references, not into the main `SKILL.md`.
 - Use existing `.ai-usage-info.md` content as source material when useful, but treat package-local skills as the successor model.

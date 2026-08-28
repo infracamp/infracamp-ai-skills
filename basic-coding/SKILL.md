@@ -53,6 +53,13 @@ Ask the user before proceeding when:
 
 
 
+## Command discipline
+
+- Avoid repeated state checks like `git status`, `git log`, `git tag`, `git diff`, `git remote`, or package-manager info commands.
+- Verify only at clear boundaries: before risky operations, after state-changing commands, or before the final response if needed.
+- Reuse already observed state and `AGENT_CONTEXT.md`; re-check only after relevant changes, failures, ambiguity, explicit user request, or to avoid destructive actions.
+- Bundle needed checks into one compact command instead of several separate calls.
+
 ## Approach to fulfill a task
 
 - Think about how many files need to be changed to fulfill the task. If it is more than 3 or it is a big change 
