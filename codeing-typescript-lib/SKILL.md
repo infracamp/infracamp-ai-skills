@@ -1,11 +1,13 @@
 ---
 name: codeing-typescript-lib
-description: Use this skill when creating or extending TypeScript libraries in monorepos such as Nx workspaces.
+description: Use this skill when creating or extending TypeScript libraries.
 ---
 
 # TypeScript Library Coding
 
-Use this skill when creating or adapting TypeScript libraries, especially in Nx monorepos.
+Use this skill when creating or adapting TypeScript libraries.
+
+For Nx monorepo setup, root Nx config, package `project.json`, or creating new Nx packages, use the separate `nx-monorepo-setup` skill instead.
 
 ## Core structure
 
@@ -18,28 +20,6 @@ Reason:
 
 - the library should work both via `npm install` and via workspace linking
 - consumers should not need to manually adjust import paths depending on whether the package is consumed from npm or from the monorepo
-
-## Recommended library layout
-
-```text
-packages/<library>/
-  package.json
-  index.ts
-  index.scss ## ONly if the library exports global styles
-  vite.config.ts
-  tsconfig.json
-  tsconfig.lib.json
-  tsconfig.spec.json
-  src/
-    components/<component-name>/
-        <component-name>.ts
-        <component-name>.spec.ts
-        <component-name>.scss
-    lib/<helper-name>.ts
-  style/  ## only if the library exports global styles
-     <mixin-name>.scss  
-  tests/
-```
 
 ## Source code placement
 
@@ -84,7 +64,7 @@ Only add them when needed.
 ## Bundler standard
 
 - use **Vite** as the standard bundler
-- orient new libraries to the existing Vite/Nx setup in the repository
+- orient new libraries to the existing Vite setup in the repository
 - prefer small, repository-consistent Vite configs over custom build setups
 
 ## Decorators

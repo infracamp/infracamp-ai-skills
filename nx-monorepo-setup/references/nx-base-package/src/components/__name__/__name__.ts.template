@@ -1,0 +1,44 @@
+import { Listen } from '@trunkjs/browser-utils';
+import { nextrap_element, NteFeatures } from '@nextrap/nt-core';
+import { html, unsafeCSS } from 'lit';
+import { customElement, property, state } from 'lit/decorators.js';
+
+import { resetStyle } from '@nextrap/style-reset';
+import style from './<%= name %>.scss?inline';
+
+const features: NteFeatures = {
+  breakpoints: true,
+  subLayoutApply: true,
+  slotVisibility: false,
+  eventBinding: true,
+};
+
+@customElement('<%= name %>')
+export class <%= elementClassName %> extends nextrap_element(features) {
+  static override styles = [unsafeCSS(style), unsafeCSS(resetStyle)];
+
+  @state()
+  private accessor _count = 0;
+
+  @property({ type: String, reflect: true })
+  public accessor name = '<%= name %>';
+
+  @Listen('click', { target: 'window', options: { passive: true } })
+  private onScroll(e: Event) {
+    this.debug('Click event', e);
+  }
+
+  override render() {
+    return html`
+      <div>
+        <h1>Hello, <%= name %>!</h1>
+        <p>Count: ${this._count}</p>
+        <button @click="${this._increment}">Increment</button>
+      </div>
+    `;
+  }
+
+  private _increment() {
+    this._count++;
+  }
+}
