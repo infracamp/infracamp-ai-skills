@@ -68,7 +68,7 @@ Do not forget this. Without the tags, the publish workflow will usually not run.
 - In monorepos, prefer targeted releases with `-p <package>` if the user only wants specific packages.
 - If a package build is intentionally disabled or replaced, note that clearly before releasing.
 - If the GitHub Actions release/publish build shows `Not Found` during npm publish or Nx release publish, treat that as a likely npm authentication or trusted-publishing problem.
-- In that case, first tell the user to log in in the container with `npm auth <username>` and complete the browser login.
+- In that case, first tell the user to log in in the container with `npm login` and complete the browser login.
 - After the user is logged in, verify that the package is correctly configured for trusted publishing.
 - Also verify the package metadata in `package.json`, especially `repository.type`, `repository.url`, and `repository.directory`. If those fields are missing or wrong, correct them.
 
@@ -77,7 +77,7 @@ Do not forget this. Without the tags, the publish workflow will usually not run.
 Commands the **user** must run:
 
 ```bash
-npm auth <username>
+npm login
 ```
 
 Then the user must complete the browser login.
@@ -94,7 +94,7 @@ If `npm trust list <package-name>` shows the wrong workflow file, revoke the old
 
 Successful flow used in this repository:
 
-1. let the user run `npm auth <username>`
+1. let the user run `npm login`
 2. verify the package exists:
    - `npm view <package-name> version`
 3. verify ownership:
@@ -157,7 +157,7 @@ When a package has never been published to npm before, the trusted publishing se
 
 Required process:
 
-1. run npm authentication in the container
+1. run `npm login` in the container
 2. finish login in the browser
 3. publish the package once manually
 4. configure trusted publishing afterwards
@@ -167,7 +167,7 @@ Required process:
 Commands the **user** must run:
 
 ```bash
-npm auth <username>
+npm login
 ```
 
 Then complete the browser login.
@@ -192,7 +192,7 @@ npm trust github <package-name> \
 ### Step 1: authenticate in the container
 
 ```bash
-npm auth <username>
+npm login
 ```
 
 This opens the login flow. Complete the browser login.
@@ -310,7 +310,7 @@ git push --follow-tags origin main
 - For first-time npm releases, do not claim trusted publishing is already active unless the package was already published and `npm trust` was configured successfully.
 - When configuring trust in a monorepo, iterate over package names explicitly.
 - Verify the workflow filename and repository slug carefully before running `npm trust github`.
-- If release or publish logs contain `Not Found`, first let the user log in with `npm auth <username>`.
+- If release or publish logs contain `Not Found`, first let the user log in with `npm login`.
 - Once the user is logged in, run the relevant verification commands yourself, such as `npm view`, `npm owner ls`, `npm trust list`, `npm trust revoke`, and `npm trust github`.
 - If `npm trust list` shows the wrong workflow file, revoke the old trust entry and recreate it with the correct workflow file.
 - Also check the affected package `package.json` for correct repository metadata and fix it when needed.
