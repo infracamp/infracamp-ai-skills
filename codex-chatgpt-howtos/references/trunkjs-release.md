@@ -1,131 +1,86 @@
-# TrunkJS releases from Codex in ChatGPT Work
+# TrunkJS release handoff from Codex in ChatGPT Work
 
-Use this procedure only when the developer explicitly requests a release or publish. Creating a PR, asking for a PR to be
-pushed, or merging an implementation PR is not sufficient release authorization.
+Codex does not create TrunkJS package versions, release commits, tags, or npm publications. When a release is needed, ask
+the developer to create and publish it from an authenticated development environment. Codex may inspect configuration,
+prepare the implementation PR, provide the exact commands, and verify the result afterwards.
 
-## Preconditions
+## Codex responsibilities before handoff
 
 1. Read `nx-release-and-npm-config/SKILL.md`, the repository `nx.json`, `.github/workflows/publish.yml`, and the target
    package's `package.json`.
-2. Confirm the implementation PR is merged, its required CI is green, and local `main` matches remote `main`.
-3. Use a targeted patch release unless the developer requested another bump.
-4. Run `npm ci` from the lockfile. Compare `npm --version` with the version installed by `publish.yml` before allowing npm
-   to rewrite the lockfile. TrunkJS currently uses npm `11.15.0` in that workflow.
-5. Verify the target package with its tests and build before versioning.
+2. Confirm the implementation PR is merged and its required CI is green.
+3. Determine the package's Nx project name, current version, intended bump, and release-tag pattern.
+4. Check for known configuration problems that the developer should expect.
+5. Give the developer the release commands without executing commands that version, commit, tag, push, or publish.
 
-Do not accept unrelated lockfile normalization. In particular, an older npm can remove `libc` metadata from optional
-packages while updating only a workspace version. If the lockfile diff contains broad metadata churn, stop and use the
-repository's npm version.
+Use a patch bump unless the developer requested another release type. For `@trunkjs/browser-utils`, the Nx project and
+tag prefix are `browser-utils`.
 
-## Normal authenticated flow
+## Commands for the developer
 
-For `@trunkjs/browser-utils`, the Nx project and release tag prefix are `browser-utils`:
+Ask the developer to run the following from an authenticated, clean checkout of TrunkJS `main`:
 
 ```bash
-NX_DAEMON=false NX_ISOLATE_PLUGINS=false \
-  ./node_modules/.bin/nx release patch --skip-publish -p browser-utils
-
+npm ci
+npm --version
+npx nx release patch --skip-publish -p browser-utils
 git push --follow-tags origin main
 ```
 
-The environment flags are useful in ChatGPT Work because the Nx daemon can fail to create its Unix socket with `EPERM`,
-and isolated plugin workers can exit before their connection is established. They do not change release contents.
+TrunkJS currently installs npm `11.15.0` in `.github/workflows/publish.yml`. The developer should use the same version
+before allowing npm to update `package-lock.json`.
 
-Run a dry run first when the release configuration, npm version, or changelog behavior has not already been verified.
+The generated release tag for this package is:
 
-## Targeted programmatic fallback
-
-TrunkJS currently configures a repository-wide pre-version build. In ChatGPT Work that can fail for projects unrelated to
-the requested package, including Sass builds whose embedded compiler cannot run in the sandbox and the root
-`@nextrap/source` target receiving an unsupported `--outputPath` option.
-
-Do not silently bypass a failing target that belongs to the release. For a genuinely targeted release, the official Nx
-programmatic API may temporarily override the pre-version command only when:
-
-- the developer explicitly requested that package release;
-- the target package's own tests and build passed;
-- every skipped failure is demonstrably outside the selected package; and
-- the override is kept outside the repository and removed after the run.
-
-The important configuration shape is:
-
-```js
-const fs = require('node:fs');
-const path = require('node:path');
-const { createAPI } = require(
-  path.join(repoRoot, 'node_modules/nx/dist/src/command-line/release/release.js'),
-);
-
-const config = JSON.parse(fs.readFileSync(path.join(repoRoot, 'nx.json'), 'utf8')).release;
-config.version.preVersionCommand =
-  'CI=true NX_DAEMON=false NX_ISOLATE_PLUGINS=false ./node_modules/.bin/nx run browser-utils:build';
-config.changelog.projectChangelogs = {
-  renderOptions: { applyUsernameToAuthors: false },
-};
-
-const release = createAPI(config, true);
-await release({
-  specifier: 'patch',
-  projects: ['browser-utils'],
-  dryRun: true,
-  skipPublish: true,
-  verbose: true,
-  preid: '',
-});
+```text
+browser-utils@<version>
 ```
 
-Clone the complete `nx.json` release configuration and call `createAPI(config, true)`. Passing only a partial override can
-fail because Nx cannot deep-merge an object into the repository's Boolean `projectChangelogs: true` value.
+Pushing that tag triggers the Publish workflow; `--skip-publish` only prevents a local npm publication.
 
-Keep `applyUsernameToAuthors: false`. Otherwise Nx may send contributor email addresses to `ungh.cc` to resolve GitHub
-usernames. Author names can remain in the changelog without this external lookup.
+## Checks the developer should make before pushing
 
-After a successful dry run, repeat with `dryRun: false`. Delete the temporary script afterwards.
-
-## Inspect before pushing
-
-Check the release once, after Nx has changed state:
+Ask the developer to inspect the release once after `nx release`:
 
 - the package and lockfile contain the requested version;
-- only intended lockfile fields changed;
+- the lockfile contains only intentional changes;
 - the changelog describes the main feature as well as fixes;
-- an `Unreleased` entry was not left below the newly generated version;
-- the release commit and annotated tag point to the same final contents.
+- an `Unreleased` entry was not left below the newly generated version; and
+- the annotated tag points to the final release commit.
 
-If the changelog needs correction, amend the still-local release commit and recreate the still-local tag before pushing.
-Never move a published tag without separate explicit authorization.
+An npm version older than the workflow version can remove `libc` metadata from optional packages while updating only a
+workspace version. Broad lockfile normalization is not part of a package release and should not be pushed.
 
-## GitHub connector and approval boundaries
+Nx may also try to resolve contributor email addresses through `ungh.cc` while rendering changelogs. If this is not
+desired, the repository release configuration should set `applyUsernameToAuthors: false` before the developer releases.
+Do not work around this by sending contributor data through another service.
 
-The GitHub connector session is not automatically available to `git` or `gh` in the shell. After
-`could not read Username for 'https://github.com'`, do not keep retrying shell pushes.
+## Known ChatGPT Work limitations
 
-Prefer one of these paths:
+These explain why Codex must hand the release off instead of attempting it inside ChatGPT Work:
 
-1. Run the release in an authenticated shell and use `git push --follow-tags origin main`.
-2. Push a release branch and merge it through a PR, then create the release tag from an authenticated environment.
-3. Use connector Git-data actions only when they expose every required operation, including tag creation, and the exact
-   default-branch mutation has been approved.
+- the Nx daemon can fail to create its Unix socket with `EPERM`;
+- isolated Nx plugin workers can exit before their connection is established;
+- repository-wide pre-version builds can include unrelated Sass projects whose embedded compiler cannot run in the
+  sandbox;
+- the root `@nextrap/source` build can receive an unsupported `--outputPath` option from current target defaults;
+- GitHub connector authorization is not available to `git` or `gh` in the shell; and
+- the connector may not expose creation of Git tags even when it can create commits and update branches.
 
-Connector-created commits have new SHAs even when their trees and messages match local commits. Create the remote commit
-first, then request approval for that actual SHA. Approval for a local SHA does not authorize a different connector SHA.
-Large lockfiles also make connector-only commit reconstruction fragile; prefer an authenticated git push or release PR.
+Do not respond to these limitations by narrowing the pre-version command, reconstructing release commits through GitHub
+Git-data actions, moving `main`, or creating tags through alternate refs. Report the relevant limitation and ask the
+developer to perform the normal release.
 
-At the time this was written, the ChatGPT GitHub connector could create blobs, trees, commits, branches, and update branch
-refs, but exposed no action for creating a Git tag. Discover current actions instead of assuming this limitation remains.
+## Verification after developer publication
 
-## Publish and downstream verification
+After the developer confirms that the version and tag were pushed, Codex should:
 
-Pushing `browser-utils@<version>` triggers `.github/workflows/publish.yml`. The workflow extracts `browser-utils` from the
-tag, runs its tests and build, and publishes through `nx release publish` with npm provenance.
+1. verify the tag exists;
+2. wait for `.github/workflows/publish.yml` to succeed;
+3. verify `npm view @trunkjs/browser-utils version` returns the new version;
+4. update the downstream dependency and lockfile only after npm serves that version;
+5. rerun downstream CI; and
+6. merge the downstream PR only when it is green and separately authorized.
 
-Do not update or merge a downstream repository merely because the tag exists:
-
-1. wait for the Publish workflow to succeed;
-2. verify `npm view @trunkjs/browser-utils version` returns the new version;
-3. update the downstream dependency and lockfile with the published version;
-4. rerun downstream CI; and
-5. merge the downstream PR only after it is green and separately authorized.
-
-For npm authentication, trusted-publishing failures, or a first publish, follow `nx-release-and-npm-config` rather than
-inventing a ChatGPT-specific workaround.
+For npm authentication, trusted-publishing failures, or a first publication, follow `nx-release-and-npm-config` and keep
+the actual version creation and publication with the developer.

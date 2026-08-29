@@ -11,6 +11,8 @@ the source of truth for the actual project; this skill only adds runtime-specifi
 ## Operating rules
 
 - Treat connector authorization, shell credentials, filesystem permissions, and mutation approval as separate concerns.
+- Codex does not create package versions, release commits, release tags, or package publications. Ask the developer to
+  create and publish the version, then verify the resulting workflow and registry state.
 - Approval to create or push a pull request does not imply approval to merge it, update the default branch, publish a
   package, or push a release tag.
 - Ask for approval only after the exact remote target is known. A commit recreated through a connector has a different SHA
