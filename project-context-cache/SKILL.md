@@ -1,13 +1,15 @@
 ---
 name: project-context-cache
-description: Load this skill first at the start of repository work; it defines AGENT_CONTEXT.md as an explicit onboarding cache for coding agents. Read root AGENT_CONTEXT.md and treat its cached repository context as correct before looking anything up; do not re-detect facts like git remote, package names, paths, Nx/release setup, or workflows unless inconsistencies or changes require updating the cache.
+description: Load this skill first at the start of repository work; it defines AGENT_CONTEXT.md as an operational onboarding cache for stable repository facts that are expensive to rediscover. Do not store architecture decisions or binding design contracts here; use the architecture-decisions skill and ARCHITECTURE.md for those.
 ---
 
 # Project Context Cache
 
 This is an explicit onboarding cache for coding agents.
 
-Use this skill whenever you start work in a repository and would normally run broad discovery commands for stable project facts.
+Use this skill whenever you start work in a repository and would normally run broad discovery commands for stable operational project facts.
+
+This cache is not an architecture record. Binding component models, structural decisions, invariants, data-flow rules, and prohibited alternatives belong in `ARCHITECTURE.md` and are handled by the `architecture-decisions` skill.
 
 ## Core rule
 
@@ -29,7 +31,7 @@ Treat the information in that file as correct first. Do not look up or re-detect
 - frequently used files and their paths
 - in monorepos: paths to packages/components with short descriptions
 - project-specific shortcuts that enable fast file access
-- known repository-specific caveats discovered in earlier sessions
+- known operational repository-specific caveats discovered in earlier sessions
 
 ## When to verify anyway
 
@@ -59,7 +61,7 @@ Rules:
 - Prefer tables and command snippets over prose.
 - Include `Last verified` dates for facts that may change.
 - Mark uncertain or time-sensitive facts clearly.
-- Never store secrets, tokens, private registry credentials, or personal login state.
+- Never store secrets, tokens, private registry credentials, personal login state, architecture decisions, or binding design contracts.
 - If a fact was wrong, replace it rather than adding contradictory notes.
 - Keep `AGENT_CONTEXT.md` at or below 500 lines.
 - If the cache grows beyond 500 lines, warn the developer and suggest an optimization, such as merging tables, removing low-value entries, moving details to package-local skills, or keeping only the most frequently used paths.
