@@ -19,10 +19,13 @@ That includes:
 Create at most two or three skills per package. Usually create:
 
 - one usage skill for package consumers
-- optionally one setup/integration skill
-- only when necessary, one additional skill for a clearly separate concern
+- optionally one setup/integration skill when setup is handled by a different audience
+- only when necessary, one additional skill for another clearly distinct audience
 
-Group related APIs in the same usage skill instead of creating one skill per class, function, or element.
+Create a separate skill only when its target audience differs. For example, application developers and theme designers
+may need separate skills because theming is irrelevant to ordinary application development. A separate concern, large
+API, or different workflow alone does not justify another skill. Group all guidance for the same audience in one skill
+and use references to split its details.
 
 ## Preferred format
 
@@ -195,7 +198,8 @@ Make sure `skills/` is shipped with the package. The directory must be included 
 ## Writing guidelines
 
 - Keep the main `SKILL.md` short and avoid repetitive rule variants.
-- Limit each package to two or three skills and combine related APIs in one consumer usage skill.
+- Limit each package to two or three skills and create more than one only for distinct target audiences.
+- Combine all related APIs for the same audience in one skill; move its detailed modes or workflows into references.
 - Prefer one concise general rule over multiple near-duplicate rules for individual APIs, versions, tools, or cases.
 - Put the package name, every public feature with its exact identifier, and its programmatic/element classification into the frontmatter description.
 - Keep the consumer skill body to an API index with a short purpose and a reference or demo link for every entry.
@@ -208,7 +212,7 @@ Make sure `skills/` is shipped with the package. The directory must be included 
 
 - Prefer package-local skills over central package usage notes when available.
 - When creating a new package skill, use the `<packagename>-<what>` naming scheme.
-- Create no more than two or three skills per package; normally use one consumer usage skill and optionally one setup skill.
+- Create no more than two or three skills per package and create a separate skill only for a distinct target audience, such as application developers, theme designers, or setup maintainers.
 - Create new package skills under `packages/<package>/skills/<skillname>/` by default.
 - The `skills/` directory must live next to `package.json`.
 - Make sure `skills/` is included in Vite/Nx assets and in `package.json` publish metadata when needed.
