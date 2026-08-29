@@ -210,6 +210,7 @@ Make sure `skills/` is shipped with the package. The directory must be included 
 
 ## Agent rules
 
+- Never edit generated `.agents/skills/npm-*` skill links directly. First resolve the symlink target. If the target belongs to a workspace package in the current repository, edit the workspace package source skill instead. If it points only into `node_modules` for an installed package, do not edit it; tell the developer that the skill is just a link to `node_modules` and that the package maintainer/developer must perform the change in the source package.
 - Prefer package-local skills over central package usage notes when available.
 - When creating a new package skill, use the `<packagename>-<what>` naming scheme.
 - Create no more than two or three skills per package and create a separate skill only for a distinct target audience, such as application developers, theme designers, or setup maintainers.

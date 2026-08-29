@@ -162,6 +162,7 @@ The official README already mentions real npm packages with built-in skills, inc
 
 ## Agent rules
 
+- Never edit generated `.agents/skills/npm-*` skill links directly. First resolve the symlink target. If the target belongs to a workspace package in the current repository, edit the workspace package source skill instead. If it points only into `node_modules` for an installed package, do not edit it; tell the developer that the skill is just a link to `node_modules` and that the package maintainer/developer must perform the change in the source package.
 - Prefer `skills-npm` when the goal is to consume skills from installed npm packages.
 - Use `npm install --save-dev skills-npm` and `npx skills-npm setup` for the initial setup.
 - Configure and run `skills-npm` in the root project, not in individual published packages.
