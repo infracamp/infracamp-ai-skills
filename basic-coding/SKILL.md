@@ -49,7 +49,7 @@ Ask the user before proceeding when:
 - Bei Folgefragen zu bereits bearbeiteten Dateien die betroffenen Dateien erneut einlesen, bevor Änderungen vorgeschlagen oder umgesetzt werden. Der User kann zwischenzeitlich selbst Änderungen gemacht haben.
 - Wenn CSS-Varianten über Klassen aktiviert werden, die Klasse sprechend benennen und alle dazugehörigen Styles zusammenhalten.
 - Ein Element sollte immer nur eine `style-*` Klasse gesetzt haben.
-- Für Demo-Styles keine unnötigen globalen Selektoren verwenden; möglichst am Demo-Root-Element oder an der konkreten Komponentenklasse scopen.
+- Für Demo-Styles keine unnötigen globalen Selektoren verwenden; möglichst am Demo-Root-Element oder an der konkreten Komponentenklasse scopen.\n- Wenn Markdown Kramdown-Blockattribute wie `{: layout="..."}` verwendet, muss die Attributzeile ohne Leerzeile direkt auf den zugehörigen Block folgen. Das gilt für horizontale Linien (`---`), Tabellen, Absätze und alle anderen Blöcke, zum Beispiel `---` unmittelbar gefolgt von `{: layout="..."}`.
 
 
 
