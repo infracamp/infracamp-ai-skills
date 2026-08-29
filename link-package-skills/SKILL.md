@@ -41,17 +41,29 @@ After that, sync runs again automatically on `npm install` or `npm ci` through t
 ```json
 {
   "scripts": {
-    "prepare": "skills-npm"
+    "prepare": "skills-npm --yes"
   }
 }
 ```
 
-If the root project already has a `prepare` script, append `skills-npm` there instead of replacing existing commands:
+Use `--yes` in lifecycle hooks so `npm install`/`npm ci` never opens an interactive confirmation prompt.
+
+If the root project already has a `prepare` script, append `skills-npm --yes` there instead of replacing existing commands:
 
 ```json
 {
   "scripts": {
-    "prepare": "husky && skills-npm"
+    "prepare": "husky && skills-npm --yes"
+  }
+}
+```
+
+When workspace-linked packages should also be scanned, make the source explicit in the hook and force a fresh scan so a stale cache from a narrower source cannot clean up valid links:
+
+```json
+{
+  "scripts": {
+    "prepare": "husky && skills-npm --source node_modules --yes --force"
   }
 }
 ```
@@ -103,6 +115,8 @@ export default defineConfig({
   agents: ['universal'],
   include: ['@leuffen/*', '@nextrap/*', '@trunkjs/*'],
   gitignore: true,
+  yes: true,
+  force: true,
 })
 ```
 
@@ -116,6 +130,7 @@ import { defineConfig } from 'skills-npm'
 export default defineConfig({
   source: 'package.json',
   agents: ['universal'],
+  yes: true,
 
   include: [
     '@vueuse/skills',
@@ -151,7 +166,9 @@ The official README already mentions real npm packages with built-in skills, inc
 - Use `npm install --save-dev skills-npm` and `npx skills-npm setup` for the initial setup.
 - Configure and run `skills-npm` in the root project, not in individual published packages.
 - In monorepos, only configure `skills-npm` in the private root package config (`"private": true`); never in workspace package configs.
-- Use the root `prepare` script for automatic sync, for example `"prepare": "skills-npm"` or `"prepare": "husky && skills-npm"` when an existing prepare command must be preserved.
+- Use the root `prepare` script for automatic sync, for example `"prepare": "skills-npm --yes"` or `"prepare": "husky && skills-npm --yes"` when an existing prepare command must be preserved.
+- Always include `--yes` in install lifecycle hooks so `npm install`/`npm ci` does not ask interactive questions.
+- When using `--source node_modules` in lifecycle hooks to include workspace-linked package skills, also include `--force` so a stale cache from a previous narrower scan cannot remove valid links.
 - Do not add package-level `postinstall` or `prepare` hooks that link skills for consumers.
 - Explain that the setup modifies root `package.json`, runs the first scan, and updates `.gitignore`.
 - Mention that generated links are symlinks named `npm-<package-name>-<skill-name>`.
