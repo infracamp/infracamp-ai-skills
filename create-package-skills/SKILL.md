@@ -16,6 +16,17 @@ That includes:
 - package-specific constraints
 - examples for common use cases
 
+Create at most two or three skills per package. Usually create:
+
+- one usage skill for package consumers
+- optionally one setup/integration skill when setup is handled by a different audience
+- only when necessary, one additional skill for another clearly distinct audience
+
+Create a separate skill only when its target audience differs. For example, application developers and theme designers
+may need separate skills because theming is irrelevant to ordinary application development. A separate concern, large
+API, or different workflow alone does not justify another skill. Group all guidance for the same audience in one skill
+and use references to split its details.
+
 ## Preferred format
 
 Create one or more focused package-local skills per package.
@@ -85,19 +96,38 @@ The main skill should stay short and focused.
 
 It should:
 
-- clearly state the **element/package name** already in the description
-- clearly state the **function/purpose** already in the description
+- name the package in the frontmatter description
+- list every supported public feature in the frontmatter description using its exact exported class, function, or custom-element name
+- identify each feature as a **programmatic API**, **element**, or both
 - stay concise
-- give the agent a quick understanding of what the package is for
-- prefer examples over long explanations
+- give package consumers a quick API index
 
-The main skill should usually cover:
+The body of the consumer-facing usage skill should contain only:
 
-- package purpose
-- main public API or entrypoints
-- important usage patterns
-- package-specific do and don'ts
-- short examples
+- the list of public API methods, classes, functions, and elements
+- one short functional description and intended use for each entry
+- a direct link for each entry to its detailed reference or repository demo
+
+Use exact identifiers such as `FormDataAccessor`, `createFormDataAccessor()`, or `<nte-form>`. Do not replace them with
+generic labels. If one feature has both an element and a programmatic API, name and classify both entrypoints.
+
+Do not place full examples, repeated explanations, installation steps, or detailed API documentation in the main
+`SKILL.md`. Put those details in references or demos and link them from the corresponding API entry.
+
+Recommended compact format:
+
+```markdown
+---
+name: form-usage
+description: Use @scope/form: FormDataAccessor (programmatic API), createFormDataAccessor() (programmatic API), and <nte-form> (element).
+---
+
+# Form usage
+
+- `FormDataAccessor` — Reads and writes structured form data. See [reference](references/form-data-accessor.md).
+- `createFormDataAccessor()` — Creates an accessor for programmatic form handling. See [demo](../../demo/form-data-accessor.ts).
+- `<nte-form>` — Provides declarative form behavior. See [reference](references/nte-form.md).
+```
 
 ## What should not bloat the main skill
 
@@ -110,9 +140,14 @@ Use references for things like:
 - installation
 - setup
 - migration notes
-- larger examples
+- API details and edge cases
+- examples for individual classes, functions, methods, and elements
 - external docs
 - supporting snippets that are useful but not core to the quick package understanding
+
+Prefer an existing repository demo when it fully documents the API. Otherwise add a focused reference. Every public API
+entry listed in the usage skill must link to one of these sources. Keep information in one place and avoid repeating the
+same explanation in the main skill, references, and demos.
 
 ## Rules inherited from ai-usage-info
 
@@ -149,9 +184,13 @@ packages/<package>/
     <packagename>-usage/
       SKILL.md
       references/
+        form-data-accessor.md
+        nte-form.md
+    form-setup/
+      SKILL.md
+      references/
         installation.md
-        setup.md
-        examples.md
+        integration.md
 ```
 
 Make sure `skills/` is shipped with the package. The directory must be included in the relevant Vite/Nx asset configuration and in `package.json` publishing metadata if such filtering is used.
@@ -159,11 +198,13 @@ Make sure `skills/` is shipped with the package. The directory must be included 
 ## Writing guidelines
 
 - Keep the main `SKILL.md` short and avoid repetitive rule variants.
-- Prefer one concise general rule over multiple near-duplicate rules for individual versions, tools, or cases.
-- Put the package name and purpose already into the frontmatter description.
-- Use concrete examples.
+- Limit each package to two or three skills and create more than one only for distinct target audiences.
+- Combine all related APIs for the same audience in one skill; move its detailed modes or workflows into references.
+- Prefer one concise general rule over multiple near-duplicate rules for individual APIs, versions, tools, or cases.
+- Put the package name, every public feature with its exact identifier, and its programmatic/element classification into the frontmatter description.
+- Keep the consumer skill body to an API index with a short purpose and a reference or demo link for every entry.
 - Prefer package-specific instructions over generic framework explanations.
-- Move installation and setup into `references/` files.
+- Move installation, setup, detailed explanations, and examples into `references/` files or repository demos.
 - Keep references focused and reusable.
 - Mention `skills-npm` only briefly in the creator skill; detailed consumption/setup belongs into `link-package-skills`.
 
@@ -171,11 +212,13 @@ Make sure `skills/` is shipped with the package. The directory must be included 
 
 - Prefer package-local skills over central package usage notes when available.
 - When creating a new package skill, use the `<packagename>-<what>` naming scheme.
+- Create no more than two or three skills per package and create a separate skill only for a distinct target audience, such as application developers, theme designers, or setup maintainers.
 - Create new package skills under `packages/<package>/skills/<skillname>/` by default.
 - The `skills/` directory must live next to `package.json`.
 - Make sure `skills/` is included in Vite/Nx assets and in `package.json` publish metadata when needed.
 - Treat `packages/<package>/.agents/skills/` as legacy unless the user explicitly wants to keep or migrate it.
-- Make the main package skill concise and descriptive.
+- Make the main package skill concise: list the exact public API identifiers, their short purpose, and their reference/demo links.
+- In the frontmatter description, list all supported functionality by exact class, function, or element name and mark each as programmatic API, element, or both.
 - Combine similar guidance into one sentence instead of adding separate rules for every version, tool, or case.
-- Put installation and setup into references, not into the main `SKILL.md`.
+- Put installation, setup, examples, and API details into references or demos, not into the main `SKILL.md`.
 - Use existing `.ai-usage-info.md` content as source material when useful, but treat package-local skills as the successor model.
