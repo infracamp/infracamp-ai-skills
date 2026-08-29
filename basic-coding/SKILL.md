@@ -59,6 +59,7 @@ Ask the user before proceeding when:
 - Verify only at clear boundaries: before risky operations, after state-changing commands, or before the final response if needed.
 - Reuse already observed state and `AGENT_CONTEXT.md`; re-check only after relevant changes, failures, ambiguity, explicit user request, or to avoid destructive actions.
 - Bundle needed checks into one compact command instead of several separate calls.
+- Wenn ein vorhandener Package-Import oder ein erwarteter Dependency-Link nicht aufgelöst wird, weise zuerst darauf hin, dass vermutlich `npm install` vergessen wurde, und frage, ob es bereits ausgeführt wurde. Biete nicht an, das Problem durch direktes/manuelles Ändern der Lockfile zu beheben; `npm install` auszuführen ist erlaubt, wenn es passend ist.
 - Ermittle Paketversionen mit gezielten Befehlen. Öffne oder lies Lockfiles niemals vollständig, sofern keine umfassende Lockfile-Analyse verlangt wird. Bevorzuge `npm pkg get`, `npm ls`, `jq` oder eine kurze Node-Abfrage. Verwende `rg` nur zur Lokalisierung relevanter Einträge und begrenze ausgegebene Zeilen.
 
 ## Approach to fulfill a task
