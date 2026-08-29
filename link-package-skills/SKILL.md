@@ -36,7 +36,7 @@ npx skills-npm setup
 2. it performs the first scan
 3. it adds the generated skill links to `.gitignore`
 
-After that, sync runs again automatically on `npm install` or `npm ci` through the prepare hook:
+After that, sync runs again automatically on `npm install` or `npm ci` through the root `prepare` hook:
 
 ```json
 {
@@ -45,6 +45,20 @@ After that, sync runs again automatically on `npm install` or `npm ci` through t
   }
 }
 ```
+
+If the root project already has a `prepare` script, append `skills-npm` there instead of replacing existing commands:
+
+```json
+{
+  "scripts": {
+    "prepare": "husky && skills-npm"
+  }
+}
+```
+
+Do not add `postinstall` or `prepare` hooks to published library packages just to link skills. Packages should only ship their `skills/` directory; the consuming/root project decides centrally when and which package skills are linked.
+
+In monorepos, configure `skills-npm` exclusively in the private root package config (`package.json` with `"private": true`). Do not add `skills-npm`, `skills-npm.config.ts`, or skill-linking lifecycle hooks to individual workspace packages.
 
 ## Package skill source layout
 
@@ -79,15 +93,29 @@ should only be migrated on explicit user request.
 
 ## Configuring selected packages and skills
 
-Use `skills-npm.config.ts` to choose which packages and skills should be linked:
+Use `skills-npm.config.ts` in the root project to choose which packages and skills should be linked:
 
 ```ts
 import { defineConfig } from 'skills-npm'
 
 export default defineConfig({
   source: 'package.json',
+  agents: ['universal'],
+  include: ['@leuffen/*', '@nextrap/*', '@trunkjs/*'],
+  gitignore: true,
+})
+```
 
-  agents: ['agents', 'codex'],
+`agents: ['universal']` links to `.agents/skills`, which is the shared project skill directory used by several agents. `skills-npm` currently does not provide a native option to choose an arbitrary target subdirectory such as `.agents/skills/npm/` or to change the `npm-` link prefix.
+
+More selective examples:
+
+```ts
+import { defineConfig } from 'skills-npm'
+
+export default defineConfig({
+  source: 'package.json',
+  agents: ['universal'],
 
   include: [
     '@vueuse/skills',
@@ -121,7 +149,11 @@ The official README already mentions real npm packages with built-in skills, inc
 
 - Prefer `skills-npm` when the goal is to consume skills from installed npm packages.
 - Use `npm install --save-dev skills-npm` and `npx skills-npm setup` for the initial setup.
-- Explain that the setup modifies `package.json`, runs the first scan, and updates `.gitignore`.
+- Configure and run `skills-npm` in the root project, not in individual published packages.
+- In monorepos, only configure `skills-npm` in the private root package config (`"private": true`); never in workspace package configs.
+- Use the root `prepare` script for automatic sync, for example `"prepare": "skills-npm"` or `"prepare": "husky && skills-npm"` when an existing prepare command must be preserved.
+- Do not add package-level `postinstall` or `prepare` hooks that link skills for consumers.
+- Explain that the setup modifies root `package.json`, runs the first scan, and updates `.gitignore`.
 - Mention that generated links are symlinks named `npm-<package-name>-<skill-name>`.
 - Prefer the package-internal `skills/<skillname>/` layout for newly created package skills.
 - The `skills/` directory must live next to `package.json`.
