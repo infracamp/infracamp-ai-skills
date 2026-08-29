@@ -13,11 +13,18 @@ Use this skill when the task is about:
 - first-time npm package release setup
 - configuring npm trusted publishing for GitHub Actions
 
+## Codex release boundary
+
+Codex must not execute commands that create package versions, release commits, release tags, or npm publications. When a
+release is requested, inspect and prepare the release instructions, then ask the developer to create and publish the
+version from an authenticated development environment. Codex may verify CI, tags, package-registry state, metadata, and
+trusted-publishing configuration afterwards.
+
 ## Nx release flow
 
 If the user asks for a release via Nx and does not specify the release type, default to a **patch release**.
 
-Preferred commands:
+Commands to give the developer:
 
 ```bash
 nx release patch --skip-publish
@@ -30,7 +37,7 @@ nx release patch --skip-publish -p <package>
 nx release patch --skip-publish -p <package-a>,<package-b>
 ```
 
-If the user explicitly asks for something else, use that instead, e.g.:
+If the developer explicitly asks for another bump, give the corresponding command instead, e.g.:
 
 ```bash
 nx release minor --skip-publish -p <package>
@@ -57,9 +64,9 @@ Typical flow:
 - For `nx release`, verify at most once before and once after the release, and only if the output does not already provide the needed facts.
 - If needed, bundle checks into one compact command; repeat only after state-changing commands, ambiguity, or explicit user request.
 
-## After a successful Nx release
+## After the developer creates the Nx release
 
-Always tell the user to run:
+Always tell the developer to run:
 
 ```bash
 git push --follow-tags origin main
@@ -185,7 +192,7 @@ npm login
 
 Then complete the browser login.
 
-Command the **agent** may prepare or instruct, but the publish itself should only happen for the first release:
+Command the **developer** must run for the first publication:
 
 ```bash
 cd dist/packages/<package>
@@ -319,7 +326,8 @@ npm trust github @meine-org/core \
 
 ## Agent rules
 
-- Prefer `nx release <bump> --skip-publish` for version preparation.
+- Do not run `nx release`, create release commits or tags, or execute `npm publish`.
+- Give the appropriate `nx release <bump> --skip-publish` command to the developer for version preparation.
 - Default to **patch** when the user does not specify the bump type.
 - After a successful release, always ask the user to run:
 
