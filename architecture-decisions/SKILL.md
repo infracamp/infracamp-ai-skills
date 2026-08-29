@@ -1,11 +1,11 @@
 ---
 name: architecture-decisions
-description: "Use before coding or changing complex components, package structure, data flow, DOM/layout behavior, or other foundational design. Search repository and relevant package roots for ARCHITECTURE.md next to language-independent project manifests such as package.json, composer.json, pyproject.toml, Cargo.toml, go.mod, or project files; read every applicable file and treat its decisions and invariants as binding unless the maintainer explicitly requests an architecture change."
+description: "Use only when developing inside a concrete repository or package and changing complex components, package structure, data flow, DOM/layout behavior, or other foundational design. Search repository and relevant package roots for ARCHITECTURE.md next to language-independent project manifests; read every applicable file and treat it as binding. Do not use for consuming or integrating a published library. Editing ARCHITECTURE.md itself requires explicit developer approval."
 ---
 
 # Architecture Decisions
 
-Use this skill before implementation when a task can affect a project's or package's fundamental structure.
+Use this skill only while developing the concrete source project when a task can affect its fundamental structure. Do not invoke it merely because an application consumes, imports, configures, or integrates a published library.
 
 ## Discovery
 
@@ -27,11 +27,14 @@ Treat documented architecture decisions, invariants, ownership boundaries, lifec
 - Prefer an implementation that fits the contract over a locally simpler alternative that changes the model.
 - Do not migrate, replace, bypass, or gradually erode the architecture as incidental cleanup.
 - If the requested work conflicts with the contract, stop and explain the conflict before editing.
-- Change an architecture contract only when the maintainer explicitly asks for or approves an architecture change.
-- When an approved architecture change is implemented, update the applicable `ARCHITECTURE.md` and related skills, references, tests, and examples in the same work.
+- Never edit, rename, move, or delete an applicable `ARCHITECTURE.md` without explicit developer approval for that architecture-document change. General approval to implement a feature, fix, or refactor is not sufficient.
+- Change an architecture contract only when the developer explicitly asks for or approves the exact architecture change.
+- When an approved architecture change is implemented, update the applicable `ARCHITECTURE.md` and related internal references, tests, and examples in the same work.
 
 ## Documentation placement
 
 Store durable architecture decisions in `ARCHITECTURE.md` at the repository or relevant package root. Do not place them in runtime/onboarding caches such as `AGENT_CONTEXT.md`.
+
+`ARCHITECTURE.md` is internal source-project guidance for maintainers and coding agents. Do not publish or bundle it in npm, Composer, PyPI, crate, binary, documentation-site, or other consumer-facing package artifacts. It is not part of a library's public usage documentation or API and must not influence ordinary library-consumer decisions.
 
 Keep the document focused on stable decisions: component model, ownership, boundaries, data flow, layout/DOM contracts, lifecycle, invariants, and deliberate non-goals. Operational facts that are merely expensive to rediscover remain in the project context cache.
