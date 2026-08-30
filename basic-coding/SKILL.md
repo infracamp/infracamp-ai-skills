@@ -66,7 +66,7 @@ Ask the user before proceeding when:
 
 - Think about how many files need to be changed to fulfill the task. If it is more than 3 or it is a big change 
   to a single file, provide the user with a short plan and ask if you are allowed to do it.
-- Scan the project for existing files. Exclude the node_modules and vendor and workspaces folders.
+- Scan the project for existing files. Exclude `node_modules`, `vendor`, and `workspaces` folders by default. Include a `workspaces` folder only when the user has explicitly approved work in that workspace.
 - Check for existing patterns, helpers, APIs, and structures before introducing something new.
 - Find inconsistencies or unclear within the prompt and ask the user for clarification if found.
 - Prefer the smallest fitting change over a broad rewrite.
@@ -90,7 +90,7 @@ Ask the user before proceeding when:
 
 ### Dont`s
 
-- Do not modify stuff in `vendor` or `node_modules` folders or files in `workspaces`. If you need changes to be made here, ask the user to do it.
+- Do not modify files in `vendor` or `node_modules`. Do not modify files in `workspaces` by default; if workspace changes are required, explain the intended scope and ask for explicit user approval. After approval, editing the agreed workspace files is allowed.
 - Do not excessive scanning or opening of files. 
 - Do not excessive programming code snippets to perform a task. Try to use bash or the existing coding tools
 - Do not import from "workspaces" or "node_modules" folders directly. Always use the package name to import from. (e.g. `import { MyComponent } from '@my-package/my-component'` instead of `import { MyComponent } from 'workspaces/my-package/src/MyComponent'`). If you find relative imports of packages, ask the user if you should fix them. 
