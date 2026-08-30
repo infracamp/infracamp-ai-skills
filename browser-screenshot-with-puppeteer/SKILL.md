@@ -1,6 +1,7 @@
 ---
 name: browser-screenshot-with-puppeteer
 description: Öffnet die aktuelle Website in einem Browser mit Puppeteer und erstellt Screenshots. Verwende diesen Skill, wenn du den aktuellen Stand einer Website visuell erfassen oder dokumentieren willst.
+compatibility: Requires Node.js, Puppeteer dependencies, access to ws://chromium:3000, and the application exposed to the browser container as http://main:4000.
 ---
 
 
@@ -33,13 +34,13 @@ If the screenshot fails, ask the user to check if the stack is available and if 
 Make screenshot of the current page:
 
 ```
-node /opt/.pi/skills/infracamp-ai-skills/browser-screenshot-with-puppeteer/scripts/screenshot.js --url http://main:4000 --device desktop --output-filename /tmp/screenshot.png
+node <skill-root>/scripts/screenshot.js --url http://main:4000 --device desktop --output-filename /tmp/screenshot.png
 ```
 
 Make screenshot and save DOM + Shadow DOM snapshot:
 
 ```
-node /opt/.pi/skills/infracamp-ai-skills/browser-screenshot-with-puppeteer/scripts/screenshot.js --url http://main:4000 --device desktop --output-filename /tmp/screenshot.png --html-output-filename /tmp/page-snapshot.html
+node <skill-root>/scripts/screenshot.js --url http://main:4000 --device desktop --output-filename /tmp/screenshot.png --html-output-filename /tmp/page-snapshot.html
 ```
 
 
