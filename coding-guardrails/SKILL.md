@@ -13,6 +13,7 @@ description: MUST be read before every task that may modify code, configuration,
 - Ask before expanding scope or making structural changes.
 - Document public library APIs with a usage example in the header, or link to a maintained example. Include important usage guidance.
 - When editing code, flag outdated related examples and ask whether to update them.
+- Before changing a skill, read `skill-authoring` and get user approval for the exact wording before applying it.
 - DO NOT change code inside `node_modules`, `dist`, `vendor`, `workspaces` unless explicitly requested - ask if changes are needed there.
 - DO NOT read or change code inside package-locked or package-generated files unless explicitly requested - ask if changes are needed there - normally `npm <command>` or `npm update` should be used instead.
 
