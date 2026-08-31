@@ -11,6 +11,8 @@ description: MUST be read before every task that may modify code, configuration,
 - Do not add undeclared packages or install transitive dependencies directly to mask a dependency defect.
 - If something expected is unavailable, stop, report the evidence, and ask whether setup, version, publication, generation, or source is missing.
 - Ask before expanding scope or making structural changes.
+- Public library APIs (functions, methods, classes, exports, configuration entry points, etc. intended for external use) must be documented well enough to use correctly. Prefer a concise usage example directly in the API/header documentation; otherwise link to a concrete, maintained example. Include important best-practice or intended-usage guidance where relevant.
+- When editing a file, check nearby usage examples or documentation for consistency with the change. If you find examples that are now incorrect or stale, point this out to the user and ask whether they should be corrected as part of the same task.
 - DO NOT change code inside `node_modules`, `dist`, `vendor`, `workspaces` unless explicitly requested - ask if changes are needed there.
 - DO NOT read or change code inside package-locked or package-generated files unless explicitly requested - ask if changes are needed there - normally `npm <command>` or `npm update` should be used instead.
 
