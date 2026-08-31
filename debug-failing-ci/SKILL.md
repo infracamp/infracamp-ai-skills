@@ -17,9 +17,14 @@ description: Diagnose and fix failing CI workflows by locating the relevant run 
    working directory, and command with the repository's local setup.
 5. Reproduce the failing command locally when the required environment is
    available.
-6. Make only the fix supported by the evidence, then run the relevant local
+6. If a declared package is unavailable after the repository's normal install,
+   or one of its expected transitive dependencies is missing, stop and inform
+   the developer that the package is not available as expected. Do not hide the
+   packaging, publishing, registry, workspace-link, or lockfile defect by adding
+   undeclared packages or explicitly installing transitive dependencies in CI.
+7. Make only the fix supported by the evidence, then run the relevant local
    verification.
-7. If authorized to update the pull request, inspect the new CI run. Otherwise
+8. If authorized to update the pull request, inspect the new CI run. Otherwise
    report the expected verification step.
 
 Never expose secrets from logs. Treat missing credentials, protected
