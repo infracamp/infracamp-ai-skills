@@ -14,6 +14,15 @@ only be loaded when relevant.
 git submodule add -b main git@github.com:infracamp/infracamp-ai-skills.git .agents/skills/infracamp-ai-skills
 ```
 
+Dann - damit du nicht immer manuell gegen origin pushen musst:
+
+```bash
+cd .agents/skills/infracamp-ai-skills
+git fetch origin
+git switch main
+git branch --set-upstream-to=origin/main main
+``
+
 Update an existing checkout with:
 
 ```bash
