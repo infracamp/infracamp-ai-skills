@@ -17,10 +17,8 @@ git submodule add -b main git@github.com:infracamp/infracamp-ai-skills.git .agen
 Dann - damit du nicht immer manuell gegen origin pushen musst:
 
 ```bash
-cd .agents/skills/infracamp-ai-skills
-git fetch origin
-git switch main
-git branch --set-upstream-to=origin/main main
+
+### NIEMALS: machen :git branch --set-upstream-to=origin/main main ## <! nicht machen!
 ```
 
 Update an existing checkout with:
