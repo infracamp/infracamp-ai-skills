@@ -35,6 +35,9 @@ repository's generators and conventions over bundled snapshots.
   the `skills/` directory.
 - In repositories using Kickstart, run project commands in the configured
   container rather than starting a parallel host runtime.
+- In npm workspace repositories, use `npm update` in GitHub Actions when updated
+  local workspace sources must be resolved; `npm ci` alone installs the locked
+  `package-lock.json` state and may not refresh workspace-linked sources.
 
 Verify the affected Nx graph or project configuration plus the narrowest
 relevant target. Do not restructure unrelated workspace configuration as part of
