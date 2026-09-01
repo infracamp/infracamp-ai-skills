@@ -21,7 +21,7 @@ cd .agents/skills/infracamp-ai-skills
 git fetch origin
 git switch main
 git branch --set-upstream-to=origin/main main
-``
+```
 
 Update an existing checkout with:
 
