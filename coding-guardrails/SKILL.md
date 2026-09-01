@@ -6,6 +6,8 @@ description: MUST be read before every task that may modify code, configuration,
 # Coding guardrails
 
 - Change only what the user requested or what is strictly necessary for it.
+- Before changing code, read all comments in the affected section. Check them for invariants, dependencies, compatibility constraints, workarounds, and coupled functionality. If the planned change could violate such guidance or impair other functionality, inform the user before making the change and wait for their decision.
+- When user feedback identifies a required correction to code you wrote, add a brief code comment if the corrected behavior is not fully self-explanatory. Explain the requirement or invariant, not the conversation or change history.
 - Prefer the simplest intended solution; avoid speculative abstractions, unrelated cleanup, and broad refactoring.
 - Do not hide missing packages, APIs, methods, exports, configuration, or artifacts with workarounds - ask the user to escalate instead.
 - Do not add undeclared packages or install transitive dependencies directly to mask a dependency defect.
