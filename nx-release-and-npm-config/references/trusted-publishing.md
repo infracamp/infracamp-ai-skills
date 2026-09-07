@@ -32,6 +32,27 @@ revoke only that entry, recreate it, and verify the resulting list once. Iterate
 explicitly over package names in monorepos; a package directory is metadata, not
 the trusted-publisher identity.
 
+## Interaktive npm-Authentifizierung
+
+`npm login` allein reicht für Trust-Operationen nicht aus. Bevor der Agent
+`npm trust github` oder `npm trust list` ausführt, muss der Entwickler in seiner
+interaktiven Sitzung einmal die Trust-Abfrage für das betroffene Paket starten
+und die 2FA-Anmeldung im Browser bestätigen:
+
+```bash
+npm trust list <package>
+```
+
+Beispiel:
+
+```bash
+npm trust list @leuffen/demo
+```
+
+Der Agent setzt erst fort, nachdem der Entwickler die erfolgreiche
+2FA-Bestätigung gemeldet hat. Eine fehlgeschlagene oder abgelaufene
+Authentifizierung darf nicht umgangen werden.
+
 Authentication and 2FA prompts must be completed by the developer. Stop rather
 than attempting to bypass a failed login, permission denial, or protected
 workflow.
