@@ -39,6 +39,11 @@ repository's generators and conventions over bundled snapshots.
   local workspace sources must be resolved; `npm ci` alone installs the locked
   `package-lock.json` state and may not refresh workspace-linked sources.
 
+## Release-Performance
+
+- Konfiguriere keinen pauschalen `release.version.preVersionCommand` mit `nx run-many -t build`: Der Projektfilter von `nx release -p` wird nicht an diesen separaten Befehl weitergegeben. Versioniere die Quell-Manifeste und baue die ausgewählten Pakete samt erforderlichen Build-Abhängigkeiten vor dem Publish im CI-Workflow. Prüfe bei bestehenden Repositories vor dem Entfernen eines Hooks, ob `manifestRootsToUpdate` oder der Versionsresolver erzeugte Dateien benötigen; stelle diesen Ablauf nicht stillschweigend um.
+- Setze bei npm-Workspaces mit Nx 22 unter `release.version.versionActionsOptions` die Optionen `installIgnoreScripts: true` und `installArgs: "--no-audit --no-fund"`. Behalte das Lockfile-Update bei; Installationsvorbereitung und Sicherheitsprüfungen gehören in die dafür vorgesehenen Setup- beziehungsweise CI-Schritte. Prüfe bei anderen Nx-Versionen die unterstützte Optionsstruktur.
+
 Verify the affected Nx graph or project configuration plus the narrowest
 relevant target. Do not restructure unrelated workspace configuration as part of
 creating or updating one package.
